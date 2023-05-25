@@ -16,8 +16,8 @@ classDef data stroke-width:0px
 
 ```mermaid
 flowchart LR
-  event_ts[(event_ts)] --> derivestay(Derive-stay) --> Clean-up stay --> stays:::data --> stay_ts[(stay_ts)]
-  clean_cell_plan --> derivestay
+  event_ts[(event_ts)] --> Derive_stay --> CleanUp_stay --> stays:::data --> stay_ts[(stay_ts)]
+  clean_cell_plan --> Derive_stay
 
 classDef data stroke-width:0px
 ```
