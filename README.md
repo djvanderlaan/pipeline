@@ -1,10 +1,12 @@
-# test-mermaid
+# Pipeline
 
+## Events: Import and clean up high frequency events
+
+Can also be roaming SMS
 
 ```mermaid
 flowchart LR
-  raw:::data --> cleanup --> determine_stays --> clean:::data
-  antenna:::data --> determine_stays
+  raw_event:::data --> Clean-up --> event:::data --> event_ts[(event_ts)]
 
 classDef data stroke-width:0px
 ```
