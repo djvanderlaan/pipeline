@@ -8,7 +8,7 @@ Can also be roaming SMS
 
 ```mermaid
 flowchart LR
-  raw_event:::data --> Clean-up --> event:::data --> event_ts[(event_ts)]
+  raw_event:::data --> CleanUp --> event:::data --> event_ts[(event_ts)]
 
 classDef data stroke-width:0px
 ```
@@ -18,8 +18,8 @@ classDef data stroke-width:0px
 
 ```mermaid
 flowchart LR
-  event_ts[(event_ts)] --> Derive_stay --> CleanUp_stay --> stays:::data --> stay_ts[(stay_ts)]
-  clean_cell_plan --> Derive_stay
+  event_ts[(event_ts)] --> DeriveStay --> CleanUpStay --> stays:::data --> stay_ts[(stay_ts)]
+  clean_cell_plan --> DeriveStay
 
 classDef data stroke-width:0px
 ```
@@ -30,7 +30,7 @@ Classify stays and clean up stays into "meaning full" anchors (home/work etc.)
 
 ```mermaid
 flowchart LR
-  stay_ts[(stay_ts)] --> clas["Classify stays [t-30,t] Derive Anchor"] --> anchor::data --> 
+  stay_ts[(stay_ts)] --> clas["DeriveAnchor"] --> anchor::data --> 
     anchor_ts[(anchor_ts)]
 
 classDef data stroke-width:0px
@@ -42,7 +42,7 @@ Roaming + Human/machine
 
 ```mermaid
 flowchart LR
-  event_ts[(event_ts)] --> roam["Derive Roaming/Country"] --> mach["Machine/Human"] --> 
+  event_ts[(event_ts)] --> roam["DeriveRoaming"] --> mach["Machine/Human"] --> 
     imsi[(imsi)]
 
 classDef data stroke-width:0px
@@ -55,7 +55,7 @@ classDef data stroke-width:0px
 ```mermaid
 flowchart LR
 
-cell_plan:::data --> CleanUp_cell --> clean_cell_plan:::data
+cell_plan:::data --> CleanUpCell --> clean_cell_plan:::data
 
 classDef data stroke-width:0px
 ```
@@ -120,10 +120,10 @@ classDef data stroke-width:0px
 ```mermaid
 flowchart LR
 
-stay_ts[("stay_ts(t)")] --> Aggregate_cell --> Back_project --> Weigh 
+stay_ts[("stay_ts(t)")] --> AggregateCell --> BackProject --> Weigh 
 
-cell_spatial_probs:::data --> Back_project
-geo_data("[geo_data]"):::data --> Back_project
+cell_spatial_probs:::data --> BackProject
+geo_data("[geo_data]"):::data --> BackProject
 
 subgraph NSI
 Weigh --> spatial_population:::Data
@@ -140,7 +140,7 @@ Derive home location
 ```mermaid
 flowchart LR
 
-stay_ts[("stay_ts [t-30,t]")] --> Derive_home --> home_ts[(home_ts)]
+stay_ts[("stay_ts [t-30,t]")] --> DeriveHome --> home_ts[(home_ts)]
 
 classDef data stroke-width:0px
 ```
@@ -148,11 +148,11 @@ classDef data stroke-width:0px
 ```mermaid
 flowchart LR
 
-stay_ts[("stay_ts(t)")] --> Aggregate_cell_home --> Back_project --> Weigh 
+stay_ts[("stay_ts(t)")] --> AggregateCellHome --> BackProject --> Weigh 
 
-home_ts[("home_ts (t)")] --> Aggregate_cell_home
-cell_spatial_probs:::data --> Back_project
-geo_data("[geo_data]"):::data --> Back_project
+home_ts[("home_ts (t)")] --> AggregateCellHome
+cell_spatial_probs:::data --> BackProject
+geo_data("[geo_data]"):::data --> BackProject
 
 subgraph NSI
   Weigh --> spatial_home_dest:::data
@@ -177,13 +177,13 @@ classDef data stroke-width:0px
 ```mermaid
 flowchart LR
 
-stay_ts[("stay_ts(t)")] --> Back_project --> Weigh 
+stay_ts[("stay_ts(t)")] --> BackProject --> Weigh 
 
 imsi[("imsi")] --> Back_project
-foreign_ts[("foreign_ts")] --> Back_project
+foreign_ts[("foreign_ts")] --> BackProject
 
 cell_spatial_probs:::data --> Back_project
-geo_data("[geo_data]"):::data --> Back_project
+geo_data("[geo_data]"):::data --> BackProject
 
 subgraph NSI
   Weigh --> foreign_spatial:::data
