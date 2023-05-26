@@ -55,7 +55,7 @@ classDef data stroke-width:0px
 ```mermaid
 flowchart LR
 
-cell_plan:::data --> CleanUp_cell --> clean_cell_plan:::data --> Mobloc -> cell_spatial_probs:::data
+cell_plan:::data --> CleanUp_cell --> clean_cell_plan:::data --> Mobloc --> cell_spatial_probs:::data
 
 classDef data stroke-width:0px
 ```
@@ -63,7 +63,7 @@ An alternative for the last step would be to use data from the MNO such as best 
 ```mermaid
 flowchart LR
 
-mno_signal:::data --> Rasterise -> cell_spatial_probs:::data
+mno_signal:::data --> Rasterise --> cell_spatial_probs:::data
 
 classDef data stroke-width:0px
 ```
@@ -73,7 +73,7 @@ classDef data stroke-width:0px
 ```mermaid
 flowchart LR
 
-geo_raw:::data --> Rasterise -> geo_data:::data
+geo_raw:::data --> Rasterise --> geo_data:::data
 
 classDef data stroke-width:0px
 ```
@@ -90,8 +90,8 @@ flowchart LR
 
 stay_ts[("stay_ts(t)")] --> Aggregate_cell --> Back_project --> Weigh --> spatial_population:::Data
 
-cell_spatial_probs --> Back_project
-geo_data("[geo_data]") --> Back_project
+cell_spatial_probs:::data --> Back_project
+geo_data("[geo_data]"):::data --> Back_project
 statistical_data:::data --> Weigh
 
 classDef data stroke-width:0px
