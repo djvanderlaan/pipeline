@@ -182,7 +182,7 @@ stay_ts[("stay_ts(t)")] --> BackProject --> Weigh
 imsi[("imsi")] --> Back_project
 foreign_ts[("foreign_ts")] --> BackProject
 
-cell_spatial_probs:::data --> Back_project
+cell_spatial_probs:::data --> BackProject
 geo_data("[geo_data]"):::data --> BackProject
 
 subgraph NSI
