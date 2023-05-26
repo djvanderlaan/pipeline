@@ -84,7 +84,6 @@ classDef data stroke-width:0px
 
 ### Use Case: Spatial current population
 
-
 ```mermaid
 flowchart LR
 
@@ -96,6 +95,60 @@ statistical_data:::data --> Weigh
 
 classDef data stroke-width:0px
 ```
+
+
+### Use Case: Spatial current population by home location
+
+Derive home location
+```mermaid
+flowchart LR
+
+stay_ts[("stay_ts [t-30,t]")] --> Derive_home --> home_ts[(home_ts)]
+
+classDef data stroke-width:0px
+```
+
+```mermaid
+flowchart LR
+
+stay_ts[("stay_ts(t)")] --> Aggregate_cell_home --> Back_project --> Weigh --> spatial_home_dest:::data
+
+home_ts[("home_ts (t)")] --> Aggregate_cell_home
+
+cell_spatial_probs:::data --> Back_project
+geo_data("[geo_data]"):::data --> Back_project
+statistical_data:::data --> Weigh
+
+classDef data stroke-width:0px
+```
+
+
+### Use Case: spatial estimation of foreign tourist
+
+```mermaid
+flowchart LR
+
+event_ts[("event_ts")] --> EnteringLeaving --> foreign_ts[(foreign_ts)]
+imsi[(imsi_ts)] --> EnteringLeaving
+
+classDef data stroke-width:0px
+```
+
+```mermaid
+flowchart LR
+
+stay_ts[("stay_ts(t)")] --> Back_project --> Weigh --> foreign_spatial:::data
+
+imsi[("imsi")] --> Back_project
+foreign_ts[("foreign_ts")] --> Back_project
+
+cell_spatial_probs:::data --> Back_project
+geo_data("[geo_data]"):::data --> Back_project
+statistical_data:::data --> Weigh
+
+classDef data stroke-width:0px
+```
+
 
 
 
