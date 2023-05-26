@@ -91,7 +91,11 @@ stay_ts[("stay_ts(t)")] --> Aggregate_cell --> Back_project --> Weigh --> spatia
 
 cell_spatial_probs:::data --> Back_project
 geo_data("[geo_data]"):::data --> Back_project
+
+subgraph NSI
+Weigh --> spatial_population:::Data
 statistical_data:::data --> Weigh
+end
 
 classDef data stroke-width:0px
 ```
