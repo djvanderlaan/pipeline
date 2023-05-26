@@ -144,14 +144,18 @@ classDef data stroke-width:0px
 ```mermaid
 flowchart LR
 
-stay_ts[("stay_ts(t)")] --> Back_project --> Weigh --> foreign_spatial:::data
+stay_ts[("stay_ts(t)")] --> Back_project --> Weigh 
 
 imsi[("imsi")] --> Back_project
 foreign_ts[("foreign_ts")] --> Back_project
 
 cell_spatial_probs:::data --> Back_project
 geo_data("[geo_data]"):::data --> Back_project
-statistical_data:::data --> Weigh
+
+subgraph NSI
+  Weigh --> foreign_spatial:::data
+  statistical_data:::data --> Weigh
+end
 
 classDef data stroke-width:0px
 ```
