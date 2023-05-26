@@ -87,7 +87,7 @@ classDef data stroke-width:0px
 ```mermaid
 flowchart LR
 
-stay_ts[("stay_ts(t)")] --> Aggregate_cell --> Back_project --> Weigh --> spatial_population:::Data
+stay_ts[("stay_ts(t)")] --> Aggregate_cell --> Back_project --> Weigh 
 
 cell_spatial_probs:::data --> Back_project
 geo_data("[geo_data]"):::data --> Back_project
@@ -115,13 +115,16 @@ classDef data stroke-width:0px
 ```mermaid
 flowchart LR
 
-stay_ts[("stay_ts(t)")] --> Aggregate_cell_home --> Back_project --> Weigh --> spatial_home_dest:::data
+stay_ts[("stay_ts(t)")] --> Aggregate_cell_home --> Back_project --> Weigh 
 
 home_ts[("home_ts (t)")] --> Aggregate_cell_home
-
 cell_spatial_probs:::data --> Back_project
 geo_data("[geo_data]"):::data --> Back_project
-statistical_data:::data --> Weigh
+
+subgraph NSI
+  Weigh --> spatial_home_dest:::data
+  statistical_data:::data --> Weigh
+end
 
 classDef data stroke-width:0px
 ```
