@@ -55,18 +55,51 @@ classDef data stroke-width:0px
 ```mermaid
 flowchart LR
 
-cell_plan:::data --> CleanUp_cell --> clean_cell_plan:::data --> Mobloc --> cell_spatial_probs:::data
+cell_plan:::data --> CleanUp_cell --> clean_cell_plan:::data
 
 classDef data stroke-width:0px
 ```
-An alternative for the last step would be to use data from the MNO such as best service maps to derive the `cell_spatial_probs`
+
+### Determine signal strength
+
+The ideal scenario is that signal strength data are delivered from the MNO 
+
 ```mermaid
 flowchart LR
 
-mno_signal:::data --> Rasterise --> cell_spatial_probs:::data
+mno_signal:::data --> Rasterise --> cell_signal_strength:::data
 
 classDef data stroke-width:0px
 ```
+
+Alternatively, signal strength can be modeled from the cell plan data, and/or the (n)-Best Server Maps:
+
+```mermaid
+flowchart LR
+
+clean_cell_plan:::data --> ModelSignalStrength --> cell_signal_strength:::data
+
+mno_BSM:::data --> ModelSignalStrength
+
+classDef data stroke-width:0px
+```
+
+One of the methods that can be used for ModelSignalStrength is the mobloc method (and corresponding R package). Best Server Maps can be used to validate the output (and set the model parameters).
+
+
+### Model probability of connection
+
+This step is needed to translate the signal strength values to the 'quality' of connection. In the mobloc method, this is called signal dominance.
+
+```mermaid
+flowchart LR
+
+cell_signal_strength:::data --> ModelConnection --> cell_spatial_probs:::data
+
+classDef data stroke-width:0px
+```
+
+
 
 ### Import geodata
 
