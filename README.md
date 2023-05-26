@@ -179,7 +179,7 @@ flowchart LR
 
 stay_ts[("stay_ts(t)")] --> BackProject --> Weigh 
 
-imsi[("imsi")] --> Back_project
+imsi[("imsi")] --> BackProject
 foreign_ts[("foreign_ts")] --> BackProject
 
 cell_spatial_probs:::data --> BackProject
