@@ -55,7 +55,7 @@ classDef data stroke-width:0px
 ```mermaid
 flowchart LR
 
-cell_plan:::data --> CleanUpCell --> clean_cell_plan:::data
+cell_plan:::data --> CleanUpCell --> clean_cell_plan_ts[(cell_plan_ts)]
 
 classDef data stroke-width:0px
 ```
