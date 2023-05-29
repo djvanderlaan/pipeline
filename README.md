@@ -120,10 +120,10 @@ classDef data stroke-width:0px
 ```mermaid
 flowchart LR
 
-stay_ts[("stay_ts(t)")] --> AggregateCell --> BackProject --> Weigh 
+stay_ts[("stay_ts(t)")] --> AggregateCell --> DistributeSpatially --> Weigh 
 
-cell_spatial_probs:::data --> BackProject
-geo_data("[geo_data]"):::data --> BackProject
+cell_spatial_probs:::data --> DistributeSpatially
+geo_data("[geo_data]"):::data --> DistributeSpatially
 
 subgraph NSI
 Weigh --> spatial_population:::Data
@@ -148,11 +148,11 @@ classDef data stroke-width:0px
 ```mermaid
 flowchart LR
 
-stay_ts[("stay_ts(t)")] --> AggregateCellHome --> BackProject --> Weigh 
+stay_ts[("stay_ts(t)")] --> AggregateCellHome --> DistributeSpatially --> Weigh 
 
 home_ts[("home_ts (t)")] --> AggregateCellHome
-cell_spatial_probs:::data --> BackProject
-geo_data("[geo_data]"):::data --> BackProject
+cell_spatial_probs:::data --> DistributeSpatially
+geo_data("[geo_data]"):::data --> DistributeSpatially
 
 subgraph NSI
   Weigh --> spatial_home_dest:::data
@@ -177,13 +177,13 @@ classDef data stroke-width:0px
 ```mermaid
 flowchart LR
 
-stay_ts[("stay_ts(t)")] --> BackProject --> Weigh 
+stay_ts[("stay_ts(t)")] --> DistributeSpatially --> Weigh 
 
-imsi[("imsi")] --> BackProject
-foreign_ts[("foreign_ts")] --> BackProject
+imsi[("imsi")] --> DistributeSpatially
+foreign_ts[("foreign_ts")] --> DistributeSpatially
 
-cell_spatial_probs:::data --> BackProject
-geo_data("[geo_data]"):::data --> BackProject
+cell_spatial_probs:::data --> DistributeSpatially
+geo_data("[geo_data]"):::data --> DistributeSpatially
 
 subgraph NSI
   Weigh --> foreign_spatial:::data
