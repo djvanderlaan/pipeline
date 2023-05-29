@@ -140,7 +140,8 @@ Derive home location
 ```mermaid
 flowchart LR
 
-stay_ts[("stay_ts [t-30,t]")] --> DeriveHome --> home_ts[(home_ts)]
+stay_ts[("stay_ts [t-30,t]")] --> DeriveAtHome --> home_ts[(home_ts)]
+anchor_ts["anchor_ts"] --> DeriveAtHome
 
 classDef data stroke-width:0px
 ```
