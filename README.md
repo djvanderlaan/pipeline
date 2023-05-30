@@ -74,16 +74,41 @@ classDef data stroke-width:0px
 
 |deviceid  |timebegin  |timeend   |cell |anchor    |
 |---------:|:----------|:---------|:----|:---------|
-|1         |t1         |t2        |A    |home      |
-|1         |t1         |t2        |B    |home      |
-|1         |t3         |t4        |C    |home      |
-|1         |t5         |t6        |D    |workplace |
+|1         |t1         |t20       |A    |home      |
+|1         |t1         |t20       |B    |home      |
+|1         |t20        |t40       |K    |home      |
+|1         |t1         |t30       |E    |workplace |
+|1         |t1         |t30       |F    |workplace |
 
 
 
 ### Classify stays
+Add labels to some of the stays. 
 
+```mermaid
+flowchart LR
+  stay
+  stay_ts[(stay_ts)] --> ClassifyStay --> stays_classified:::data --> stay_class --> stay_class_ts[(stay_class_ts)]
 
+  anchor_ts[(anchor_ts)] --> ClassifyStay
+
+classDef data stroke-width:0px
+```
+
+|deviceid  |timebegin |timeend |cell |stayid |class |
+|---------:|:---------|:-------|:----|------:|:-----|
+|1         |t1        |t2      |A    |1      |home  |
+|1         |t3        |t3      |B    |1      |home  |
+|1         |t4        |t4      |A    |1      |home  |
+|1         |t5        |t5      |C    |       |      |
+|1         |t6        |t6      |D    |       |      |
+|1         |t7        |t7      |E    |2      |work  |
+|1         |t9        |t9      |F    |2      |work  |
+|1         |t10       |t10     |E    |2      |work  |
+|1         |t11       |t11     |D    |       |      |
+|1         |t12       |t12     |G    |       |      |
+|1         |t13       |t13     |A    |3      |home  |
+|1         |t14       |t14     |B    |3      |home  |
 
 
 ### Device classification
