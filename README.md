@@ -37,7 +37,6 @@ Stays combine multiple events where a device 'stayed' in one location. In the mo
 flowchart LR
   event_ts[(event_ts)] --> DeriveStay --> CleanUpStay --> stays:::data --> stay_ts[(stay_ts)]
 
-  clean_cell_plan("[clean_cell_plan]")::data -.-> DeriveStay
 
 classDef data stroke-width:0px
 ```
