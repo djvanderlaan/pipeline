@@ -13,16 +13,30 @@ flowchart LR
 classDef data stroke-width:0px
 ```
 
+|deviceid  |time   |antenna|
+|---------:|:------|:------|
+|1         |t1     |A      |
+|1         |t2     |A      |
+|1         |t3     |B      |
+|1         |t4     |A      |
+|1         |t5     |C      |
+|1         |t6     |D      |
+|1         |t7     |E      |
+|1         |t9     |F      |
+|1         |t10    |E      |
+|1         |t11    |D      |
+|1         |t12    |G      |
+|1         |t13    |A      |
+|1         |t14    |B      |
+
 ### Stays: Turn high frequency data/events into stays
 
 
 ```mermaid
 flowchart LR
-  event_ts[(event_ts)] --> DeriveStay --> CleanUpStay --> stays:::data --> stay_ts[(stay_ts)]
-  clean_cell_plan --> DeriveStay
+  event_ts[(event_ts)] --> DeriveStay --> CleanUpStay --> ClassifyStays --> stays:::data --> stay_ts[(stay_ts)]
 
-  stays:::data --> ClassifyStays --> stays_c:::data
-
+  [clean_cell_plan] -.-> DeriveStay
   anchor_ts[(anchor_ts)] --> ClassifyStays
 
 classDef data stroke-width:0px
