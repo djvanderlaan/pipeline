@@ -38,7 +38,6 @@ flowchart LR
   event_ts[(event_ts)] --> DeriveStay --> CleanUpStay --> stays:::data --> stay_ts[(stay_ts)]
 
   clean_cell_plan("[clean_cell_plan]")::data -.-> DeriveStay
-  anchor_ts[(anchor_ts)] --> ClassifyStays
 
 classDef data stroke-width:0px
 ```
