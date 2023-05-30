@@ -13,38 +13,56 @@ flowchart LR
 classDef data stroke-width:0px
 ```
 
-|deviceid  |time   |antenna|
-|---------:|:------|:------|
-|1         |t1     |A      |
-|1         |t2     |A      |
-|1         |t3     |B      |
-|1         |t4     |A      |
-|1         |t5     |C      |
-|1         |t6     |D      |
-|1         |t7     |E      |
-|1         |t9     |F      |
-|1         |t10    |E      |
-|1         |t11    |D      |
-|1         |t12    |G      |
-|1         |t13    |A      |
-|1         |t14    |B      |
+|deviceid  |time   |cell |
+|---------:|:------|:----|
+|1         |t1     |A    |
+|1         |t2     |A    |
+|1         |t3     |B    |
+|1         |t4     |A    |
+|1         |t5     |C    |
+|1         |t6     |D    |
+|1         |t7     |E    |
+|1         |t9     |F    |
+|1         |t10    |E    |
+|1         |t11    |D    |
+|1         |t12    |G    |
+|1         |t13    |A    |
+|1         |t14    |B    |
 
 ### Stays: Turn high frequency data/events into stays
 
+Stays combine multiple events where a device 'stayed' in one location. In the most simple case these are just periods where a device had events on only one cell. For more complex use cases it could be possible to combine events from different cells into one stay when these cells cover the same location. Note that not alle events have to be classified into stays. Events can remain on their own.
 
 ```mermaid
 flowchart LR
-  event_ts[(event_ts)] --> DeriveStay --> CleanUpStay --> ClassifyStays --> stays:::data --> stay_ts[(stay_ts)]
+  event_ts[(event_ts)] --> DeriveStay --> CleanUpStay --> stays:::data --> stay_ts[(stay_ts)]
 
-  clean_cell_plan -.-> DeriveStay
+  clean_cell_plan("[clean_cell_plan]")::data -.-> DeriveStay
   anchor_ts[(anchor_ts)] --> ClassifyStays
 
 classDef data stroke-width:0px
 ```
 
+Possible output format could be (continueing the previous example):
+
+|deviceid  |timebegin |timeend |cell |stayid |
+|---------:|:---------|:-------|:----|------:|
+|1         |t1        |t2      |A    |1      |
+|1         |t3        |t3      |B    |1      |
+|1         |t4        |t4      |A    |1      |
+|1         |t5        |t5      |C    |       |
+|1         |t6        |t6      |D    |       |
+|1         |t7        |t7      |E    |2      |
+|1         |t9        |t9      |F    |2      |
+|1         |t10       |t10     |E    |2      |
+|1         |t11       |t11     |D    |       |
+|1         |t12       |t12     |G    |       |
+|1         |t13       |t13     |A    |3      |
+|1         |t14       |t14     |B    |3      |
+
 ### Anchors
 
-Classify stays and clean up stays into "meaning full" anchors (home/work etc.)
+Anchors are meaningfull locations for a device. One important example is 'home' which is the home location of a device. The anchors are relatively constant in time, but they can change in time. For example, persons can move to another address. They are also device dependent. In order to determine anchors for a device a longer period of data is required. It depends on the use cased the pipeline has to serve, which types of anchors are relevant. For most use cases the 'home' anchor will be relevant.
 
 ```mermaid
 flowchart LR
@@ -53,6 +71,20 @@ flowchart LR
 
 classDef data stroke-width:0px
 ```
+
+
+|deviceid  |timebegin  |timeend   |cell |anchor    |
+|---------:|:----------|:---------|:----|:---------|
+|1         |t1         |t2        |A    |home      |
+|1         |t1         |t2        |B    |home      |
+|1         |t3         |t4        |C    |home      |
+|1         |t5         |t6        |D    |workplace |
+
+
+
+### Classify stays
+
+
 
 
 ### Device classification
