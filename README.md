@@ -87,7 +87,6 @@ Add labels to some of the stays.
 
 ```mermaid
 flowchart LR
-  stay
   stay_ts[(stay_ts)] --> ClassifyStay --> stays_classified:::data --> stay_class --> stay_class_ts[(stay_class_ts)]
 
   anchor_ts[(anchor_ts)] --> ClassifyStay
