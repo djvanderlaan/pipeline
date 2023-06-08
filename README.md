@@ -7,8 +7,28 @@
 Can also be roaming SMS
 
 ```mermaid
+flowchart TD
+
+rawevent:data("Raw Mno Event")
+event:data("MNO Event")
+stay("Stay")
+event:db[("Events")]
+anchor_db[("Anchor")]
+cud_db[("Continuous User Diary")]
+
+derive_stay["Derive Stay"]
+
+rawevent:data --> CleanUp["Clean Events"] --> event:data
+event:data --> event:db
+event:db --> derive_stay --> stay
+
+stay --> derive_achor["Derive Anchor"] --> anchor_db
+stay --> cud_db
+```
+
+```mermaid
 flowchart LR
-  raw_event:::data --> CleanUp --> event:::data --> event_ts[(event_ts)]
+  RawMNOEvents:::data --> CleanUp --> MNOEvents:::data --> event_ts[(event_ts)]
 
 classDef data stroke-width:0px
 ```
