@@ -25,24 +25,34 @@ Anchor:
 - would benefit from frequencies/stays fractions of the period
 ```mermaid
 
+
 flowchart TD
 
-rawevent:data("Raw Mno Event")
-event:data("MNO Event")
-stay("Stay")
-event:db[("Events")]
+classDef data fill:#033d59,stroke-width:2px;
+classDef process fill:#f3a000,stroke-width:2px;
+classDef db fill:#98c363,stroke:#333333;
+
+rawevent("Raw Mno Event"):::data
+event:data("MNO Event"):::data
+stay("Stay"):::data
+event:db[("Events")]:::db
 anchor_db[("Anchor")]
 cud_db[("Continuous User Diary")]
 
-derive_stay["Derive Stay"]
-make_cont["Make Continous"]
-label["Label stay"]
+derive_stay["Derive Stay"]:::process
+derive_achor["Derive Anchor"]:::process
+make_cont["Make Continous"]:::process
+label["Label stay"]:::process
 
-rawevent:data --> CleanUp["Clean Events"] --> event:data
+rawevent --> CleanUp["Clean Events"] --> event:data
 event:data --> event:db
 event:db --> derive_stay --> stay
 
-stay --> derive_achor["Derive Anchor"] --> anchor_db
+subgraph anchor
+stay --> derive_achor
+end
+
+derive_achor --> anchor_db
 anchor_db --> label
 
 subgraph cud["Continous User Diary"]
