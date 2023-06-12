@@ -28,40 +28,54 @@ Anchor:
 
 flowchart TD
 
-classDef data fill:#033d59,stroke-width:2px;
-classDef process fill:#f3a000,stroke-width:2px;
-classDef db fill:#98c363,stroke:#333333;
+classDef data fill:#033d59,stroke-width:1px, color:#333333;
+classDef process fill:#f3a000,stroke-width:1px,color:#333333;
+classDef db fill:#98c363,stroke:#333333,color:#333333;
 
-rawevent("Raw Mno Event"):::data
-event:data("MNO Event"):::data
-stay("Stay"):::data
-event:db[("Events")]:::db
-anchor_db[("Anchor")]
-cud_db[("Continuous User Diary")]
+RawEvent[("Raw Mno Event")]:::db
+Event[("MNO Event")]:::db
+
+Stay[("Stay")]:::db
+
+anchor_db[("Anchor")]:::db
+cud_db[("Continuous User Diary")]:::db
 
 derive_stay["Derive Stay"]:::process
 derive_achor["Derive Anchor"]:::process
 make_cont["Make Continous"]:::process
 label["Label stay"]:::process
 
-rawevent --> CleanUp["Clean Events"] --> event:data
-event:data --> event:db
-event:db --> derive_stay --> stay
 
-subgraph anchor
-stay --> derive_achor
+clean_up["Clean events"]:::process
+
+RawEvent --> clean_up --> Event
+Event --> derive_stay --> Stay
+Stay --> derive_achor
+
+subgraph Anchor
+derive_achor --> anchor_db
 end
 
-derive_achor --> anchor_db
 anchor_db --> label
 
+Stay --> make_cont
 subgraph cud["Continous User Diary"]
-stay --> make_cont --> label
+make_cont --> label
 label --> cud_db
 end
 
-cud_db --> location_region
+cells_to_region["Cell To Region"]:::process
+cud_db --> cells_to_region
 
+RawNetwork[("Raw Network")]:::db
+Network[("Network")]:::db 
+clean_network["Clean"]:::process
+
+RegionCud[("Regional \n User Diary")]:::db
+
+RawNetwork --> clean_network --> Network
+Network ---> cells_to_region
+cells_to_region --> RegionCud
 
 ```
 
