@@ -58,6 +58,10 @@ anchor_db --> label
 subgraph cud["Continous User Diary"]
 stay --> make_cont --> label
 label --> cud_db
-end 
+end
+
+cud_db --> location_region
+
+
 ```
 
