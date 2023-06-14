@@ -34,9 +34,7 @@ classDef db fill:#98c363,stroke:#333333,color:#333333;
 
 RawEvent[("Raw Mno Event")]:::db
 Event[("MNO Event")]:::db
-
 Stay[("Stay")]:::db
-
 anchor_db[("Anchor")]:::db
 cud_db[("Continuous User Diary")]:::db
 
@@ -44,13 +42,11 @@ derive_stay["Derive Stay"]:::process
 derive_achor["Derive Anchor"]:::process
 make_cont["Make Continous"]:::process
 label["Label stay"]:::process
-
-
 clean_up["Clean events"]:::process
 
 RawEvent --> clean_up --> Event
-Event --> derive_stay --> Stay
-Stay --> derive_achor
+Event --> make_cont --> TimeSegment
+TimeSegment --> derive_achor
 
 subgraph Anchor
 derive_achor --> anchor_db
@@ -60,7 +56,7 @@ anchor_db --> label
 
 Stay --> make_cont
 subgraph cud["Continous User Diary"]
-make_cont --> label
+TimeSegment --> label
 label --> cud_db
 end
 
