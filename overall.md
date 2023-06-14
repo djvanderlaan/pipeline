@@ -23,55 +23,71 @@ Anchor:
 - list of cell_ids
 - needs a longer period of stays/events to analyze patterns
 - would benefit from frequencies/stays fractions of the period
-```mermaid
 
+```mermaid
 
 flowchart TD
 
 classDef data fill:#033d59,stroke-width:1px, color:#333333;
 classDef process fill:#f3a000,stroke-width:1px,color:#333333;
-classDef db fill:#98c363,stroke:#333333,color:#333333;
+classDef db fill:#c8f3c3,stroke:#333333,color:#333333;
+classDef db_rest fill:#98c363,stroke:#333333,color:#333333;
 
-RawEvent[("Raw Mno Event")]:::db
+RawEvent[("Raw MNO Event")]:::db
 Event[("MNO Event")]:::db
-Stay[("Stay")]:::db
-anchor_db[("Anchor")]:::db
-cud_db[("Continuous User Diary")]:::db
+anchor_db[("Anchor")]:::db_rest
+cud_db[("Continuous User Diary")]:::db_rest
+TimeSegment[("Time Segment")]:::db
 
-derive_stay["Derive Stay"]:::process
 derive_achor["Derive Anchor"]:::process
 make_cont["Make Continous"]:::process
-label["Label stay"]:::process
-clean_up["Clean events"]:::process
+label["Label Stay"]:::process
+clean_up["Clean Events"]:::process
 
 RawEvent --> clean_up --> Event
 Event --> make_cont --> TimeSegment
-TimeSegment --> derive_achor
 
-subgraph Anchor
-derive_achor --> anchor_db
+TimeSegment --> derive_achor
+subgraph Anchor["Determine Anchors"]
+  derive_achor --> anchor_db
 end
 
 anchor_db --> label
-
-Stay --> make_cont
-subgraph cud["Continous User Diary"]
 TimeSegment --> label
-label --> cud_db
+subgraph cud["Continous User Diary"]
+  label --> cud_db
 end
 
 cells_to_region["Cell To Region"]:::process
 cud_db --> cells_to_region
 
-RawNetwork[("Raw Network")]:::db
-Network[("Network")]:::db 
+RawNetwork[("Raw MNO Network")]:::db
+Network[("Network")]:::db_rest
 clean_network["Clean"]:::process
+
+Network -.-> make_cont
+RawNetwork --> clean_network --> Network
+```
+
+# Example Use Case
+
+
+```mermaid
+flowchart TD
+
+classDef data fill:#033d59,stroke-width:1px, color:#333333;
+classDef process fill:#f3a000,stroke-width:1px,color:#333333;
+classDef db fill:#c8f3c3,stroke:#333333,color:#333333;
+classDef db_rest fill:#98c363,stroke:#333333,color:#333333;
+
+anchor_db[("Anchor")]:::db_rest
+cud_db[("Continuous User Diary")]:::db_rest
+Network[("Network")]:::db_rest
+
 
 RegionCud[("Regional \n User Diary")]:::db
 
-RawNetwork --> clean_network --> Network
+cud_db --> cells_to_region
 Network ---> cells_to_region
 cells_to_region --> RegionCud
-
 ```
-
