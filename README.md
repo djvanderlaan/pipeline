@@ -90,7 +90,7 @@ flowchart LR
 stay_ts[("stay_ts(t)")] --> Aggregate_cell --> Back_project --> Weigh 
 
 cell_spatial_probs:::data --> Back_project
-geo_data("[geo_data]"):::data --> Back_project
+geo_data("[geo_data]"):::data -.-> Back_project
 
 subgraph NSI
 Weigh --> spatial_population:::Data
@@ -119,7 +119,7 @@ stay_ts[("stay_ts(t)")] --> Aggregate_cell_home --> Back_project --> Weigh
 
 home_ts[("home_ts (t)")] --> Aggregate_cell_home
 cell_spatial_probs:::data --> Back_project
-geo_data("[geo_data]"):::data --> Back_project
+geo_data("[geo_data]"):::data -.-> Back_project
 
 subgraph NSI
   Weigh --> spatial_home_dest:::data
@@ -150,7 +150,7 @@ imsi[("imsi")] --> Back_project
 foreign_ts[("foreign_ts")] --> Back_project
 
 cell_spatial_probs:::data --> Back_project
-geo_data("[geo_data]"):::data --> Back_project
+geo_data("[geo_data]"):::data -.-> Back_project
 
 subgraph NSI
   Weigh --> foreign_spatial:::data
