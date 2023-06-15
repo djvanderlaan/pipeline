@@ -1,0 +1,22 @@
+
+body {
+  max-width: 50rem;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: "Palatino", serif;
+  font-size: 1.1rem;
+}
+p, dd, li {
+  text-align: justify;
+}
+code {
+  font-size: 80%;
+}
+
+h1.title {
+  text-align: center;
+}
+p.author, p.date {
+  text-align: center;
+  font-weight: bold;
+}
