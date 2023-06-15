@@ -99,7 +99,10 @@ classDiagram
 : For example, the home location of a Device can be defined using a number of Cells (possibly weighted).
 : A device can have multiple `Anchors` (e.g. 'Home', 'Work')
 : Has a begin time and end time for which the `Anchor` is valid.
-: TODO: home country for tourists and border migration
+
+<!--
+TODO: home country for tourists and border migration. Possible solution would be to have two types of achors: CellAnchor where the anchor is a combination of Cells and CountryAnchor where the anchor is a country. For, border trafic the anchor is probably a combination: Country + Cells where person crosses the border most often. So perhaps better to put it all in Anchor class and allow either country or cells to empty (at least one should be filled).
+-->
 
 ```mermaid
 classDiagram
