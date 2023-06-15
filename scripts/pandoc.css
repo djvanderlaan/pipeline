@@ -20,3 +20,9 @@ p.author, p.date {
   text-align: center;
   font-weight: bold;
 }
+
+pre.mermaid {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
