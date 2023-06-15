@@ -76,9 +76,12 @@ classDiagram
 ```
 
 `Time Segment`
-: Combines several `Events` of a Device into continuous time segments. In principle time segments are continuous (there are no gaps between the `Time Segments`). However, it is possible that for certain longer time periodes without events no `Time Segment` is defined. 
+: Combines one or more `Events` of a Device that are close in space and time. 
+: Has a starting time and an end time. 
+: In principle time segments are continuous (there are no gaps between the `Time Segments` e.g. the end time of one segment is the starting time of the next segment). However, it is possible that for certain longer time periodes without events no `Time Segment` is defined. 
+: Cannot overlap.
 : Contains the seperate `Events`. Therefore, no information present in the `Events` is lost. 
-: Can contain `Events` that took place at different Cell.
+: Can contain `Events` that took place at different Cells.
 
 
 ```mermaid
@@ -87,15 +90,16 @@ classDiagram
     +start_time: Time
     +end_time: Time
     +events: Event[0..*]
-    +type: Enum[Stay, Move, Other, Unknown, OutOfCountry]
+    +type: Enum[Stay, Move, Other, Missing, OutOfCountry]
   }
 ```
 
 `Anchor`
-: A combination of Cell that is meaningfull for a Device. An `Anchor` is, therefore, labelled.
+: A combination of Cells that is meaningfull for a Device. An `Anchor` is, therefore, labelled.
 : For example, the home location of a Device can be defined using a number of Cells (possibly weighted).
 : A device can have multiple `Anchors` (e.g. 'Home', 'Work')
 : Has a begin time and end time for which the `Anchor` is valid.
+: TODO: home country for tourists and border migration
 
 ```mermaid
 classDiagram
@@ -104,6 +108,7 @@ classDiagram
     +end_time: Time
     +type: Enum[Home, Work, ...]
     +cells: CellID[1..*]
+    +weights: Number[1..*]
   }
 ```
 
