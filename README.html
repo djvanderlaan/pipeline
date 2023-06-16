@@ -147,19 +147,15 @@ information is lost when converting the <code>Events</code> to
     +type: Enum[Stop, Moving, Other, Missing, OutOfCountry]
   }</pre>
 <h4 id="anchor"><code>Anchor</code></h4>
-<ul>
-<li>A combination of Cells that is meaningfull for a Device. An
-<code>Anchor</code> is, therefore, labelled.</li>
-<li>For example, the home location of a Device can be defined using a
-number of Cells (possibly weighted).</li>
-<li>A device can have multiple <code>Anchors</code> (e.g. ‘Home’,
-‘Work’)</li>
-<li>Has a begin time and end time for which the <code>Anchor</code> is
-valid.</li>
-</ul>
-<!--
-TODO: home country for tourists and border migration. Possible solution would be to have two types of achors: CellAnchor where the anchor is a combination of Cells and CountryAnchor where the anchor is a country. For, border trafic the anchor is probably a combination: Country + Cells where person crosses the border most often. So perhaps better to put it all in Anchor class and allow either country or cells to empty (at least one should be filled).
--->
+<p>An <code>Anchor</code> is a weighted combination of
+<code>Cells</code> that define a meaningful location for a Device.
+<code>Anchor</code> are, therefore, labelled. For example, the home
+location of a Device can be defined using a number of Cells each with
+their own weight. The combination of Cells with their weights can then
+be used to determine a more precise home location of a device. As,
+locations such as the home location can change in time, an
+<code>Anchor</code> has a start and end time in which the
+<code>Anchor</code> is valid.</p>
 <pre class="mermaid">classDiagram
   class Anchor {
     +start_time: Time
@@ -168,6 +164,16 @@ TODO: home country for tourists and border migration. Possible solution would be
     +cells: CellID[1..*]
     +weights: Number[1..*]
   }</pre>
+<p>Discussion point: How to handle devices that have a home location
+outside of the country? For devices that are located just outside the
+border and commute regularly into the country, it is possible to define
+the ‘BorderCrossing’ location by the Cells where the device usually
+enters and leaves the country. For other devices, and specifically
+foreign devices it would be practical to define a ‘HomeCountry’
+<code>Anchor</code>. However, this is not tied to specific Cells. One
+solution would be to add pseudo Cells for other countries. Another
+solution would be to add an optional ‘country’ attribute to the
+<code>Anchor</code>.</p>
 <h4 id="continuous-user-diary"><code>Continuous User Diary</code></h4>
 <ul>
 <li>In the <code>Continuous User Diary</code> some of the

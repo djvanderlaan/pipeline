@@ -127,14 +127,7 @@ classDiagram
 ```
 
 #### `Anchor`
-- A combination of Cells that is meaningfull for a Device. An `Anchor` is, therefore, labelled.
-- For example, the home location of a Device can be defined using a number of Cells (possibly weighted).
-- A device can have multiple `Anchors` (e.g. 'Home', 'Work')
-- Has a begin time and end time for which the `Anchor` is valid.
-
-<!--
-TODO: home country for tourists and border migration. Possible solution would be to have two types of achors: CellAnchor where the anchor is a combination of Cells and CountryAnchor where the anchor is a country. For, border trafic the anchor is probably a combination: Country + Cells where person crosses the border most often. So perhaps better to put it all in Anchor class and allow either country or cells to empty (at least one should be filled).
--->
+An `Anchor` is a weighted combination of `Cells` that define a meaningful location for a Device. `Anchor` are, therefore, labelled. For example, the home location of a Device can be defined using a number of Cells each with their own weight. The combination of Cells with their weights can then be used to determine a more precise home location of a device. As, locations such as the home location can change in time, an `Anchor` has a start and end time in which the `Anchor` is valid.
 
 ```mermaid
 classDiagram
@@ -146,6 +139,9 @@ classDiagram
     +weights: Number[1..*]
   }
 ```
+
+Discussion point: How to handle devices that have a home location outside of the country? For devices that are located just outside the border and commute regularly into the country, it is possible to define the 'BorderCrossing' location by the Cells where the device usually enters and leaves the country. For other devices, and specifically foreign devices it would be practical to define a 'HomeCountry' `Anchor`. However, this is not tied to specific Cells. One solution would be to add pseudo Cells for other countries. Another solution would be to add an optional 'country' attribute to the `Anchor`. 
+
 
 #### `Continuous User Diary`
 - In the `Continuous User Diary` some of the `Time Segments` are labelled. 
