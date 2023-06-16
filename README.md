@@ -90,7 +90,7 @@ classDiagram
     +start_time: Time
     +end_time: Time
     +events: Event[0..*]
-    +type: Enum[Stop, Other, Missing, OutOfCountry]
+    +type: Enum[Stop, Moving, Other, Missing, OutOfCountry]
   }
 ```
 
