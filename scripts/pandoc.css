@@ -11,6 +11,7 @@ p, dd, li {
 }
 code {
   font-size: 80%;
+  color: darkred;
 }
 
 h1.title {

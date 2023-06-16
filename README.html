@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Edwin de Jonge and Jan van der Laan" />
+  <meta name="dcterms.date" content="2023-06-14" />
+  <title>README.md</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="scripts/pandoc.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Overview pipeline - version 0.1</h1>
+<p class="author">Edwin de Jonge and Jan van der Laan</p>
+<p class="date">2023-06-14</p>
+</header>
+<h2 id="overview-of-the-general-pipeline">Overview of the general
+pipeline</h2>
+<p>The schema below shows an overview of the general pipeline. The
+cylinder shaped objects are the different object types. The rectangles
+are the processes transforming the object types. Note that in practice a
+transformation between two object types can consist of multiple
+subtransformations. The goal of this schema is to give the outline of
+the process. The darker green data types are the general components that
+can be used by the different use-cases.</p>
+<pre class="mermaid">
+flowchart TD
+
+classDef data fill:#033d59,stroke-width:1px, color:#333333;
+classDef process fill:#f3a000,stroke-width:1px,color:#333333;
+classDef db fill:#c8f3c3,stroke:#333333,color:#333333;
+classDef db_rest fill:#98c363,stroke:#333333,color:#333333;
+
+RawEvent[(&quot;Raw MNO\nEvent&quot;)]:::db
+Event[(&quot;Event&quot;)]:::db
+TimeSegment[(&quot;Time\nSegment&quot;)]:::db
+RawEvent[(&quot;Raw MNO\nEvent&quot;)]:::db
+Event[(&quot;Event&quot;)]:::db
+TimeSegment[(&quot;Time\nSegment&quot;)]:::db
+RawNetwork[(&quot;Raw MNO\nNetwork\nTopology&quot;)]:::db
+
+Network[(&quot;Network\nTopology&quot;)]:::db_rest
+AnchorDB[(&quot;Anchor&quot;)]:::db_rest
+CUDDB[(&quot;Continuous User\nDiary&quot;)]:::db_rest
+
+derive_achor[&quot;Derive Anchor&quot;]:::process
+make_cont[&quot;Make Continuous&quot;]:::process
+label[&quot;Label Time Segment&quot;]:::process
+clean_up[&quot;Import and Clean Events&quot;]:::process
+clean_network[&quot;Import and Preprocess Topology&quot;]:::process
+
+subgraph proces_events[&quot;Process Events&quot;]
+  RawEvent --&gt; clean_up --&gt; Event
+  Event --&gt; make_cont --&gt; TimeSegment
+end
+
+TimeSegment --&gt; derive_achor
+subgraph Anchor[&quot;Determine Anchors&quot;]
+  derive_achor --&gt; AnchorDB
+end
+
+AnchorDB --&gt; label
+TimeSegment --&gt; label
+subgraph cud[&quot;Continous User Diary&quot;]
+  label --&gt; CUDDB
+end
+
+subgraph preprocessnetwork[&quot;Prepare Network Topology&quot;]
+  RawNetwork --&gt; clean_network --&gt; Network
+  Network ---&gt; make_cont
+  Network --&gt; clean_up
+end
+
+
+
+subgraph USECASE[&quot;Use Case&quot;]
+
+  DeviceDist[(&quot;Device Estimates&quot;)]:::db
+  Census[(&quot;Census Data&quot;)]:::db
+  RegionCud[(&quot;Population Estimates&quot;)]:::db
+  Regions[(&quot;Geographic Regions\n(Use Case Specific)&quot;)]:::db
+
+  aggregate[&quot;Aggregate&amp;Select\n(Use Case Specific)&quot;]:::process
+  cells_to_region[&quot;Cells to\n Spatial Region&quot;]:::process
+  weight[&quot;Statistical Weighting&quot;]:::process
+
+  AnchorDB --&gt; aggregate
+  CUDDB --&gt; aggregate
+  Network ---&gt; cells_to_region
+  Regions --&gt; cells_to_region
+  aggregate --&gt; cells_to_region
+  cells_to_region --&gt; DeviceDist
+
+  DeviceDist --&gt; weight
+  subgraph atnsi[&quot;@NSI&quot;]
+    Census --&gt; weight
+    weight --&gt; RegionCud
+  end
+
+end
+</pre>
+<h3 id="main-concepts-in-the-general-pipeline">Main concepts in the
+general pipeline</h3>
+<h4 id="event"><code>Event</code></h4>
+<p>The main information (after preprocessing) obtained from the MNO.
+Contains discrete events. The main information in the events are the
+DeviceID, CellID and Time at which the event occured.</p>
+<pre class="mermaid">classDiagram
+  class Event {
+    +device_id: DeviceID
+    +time: Time
+    +cell_id: CellID
+    [+location: GeoPoint[WGS84]]
+    [+loc_error: Metres]
+    [+type_of_event: Enum[InternetTrafic, IncomingOutgoingCall, ..., OutgoingSMS]]
+  }</pre>
+<h4 id="time-segment"><code>Time Segment</code></h4>
+<p>In a <code>Time Segment</code> one or more <code>Events</code> that
+are close in space and time are combined. They have a starting and end
+time and are in principle continuous (there are no gaps between the
+<code>Time Segments</code> e.g. the end time of one segment is the
+starting time of the next segment). However, it is possible that for
+certain longer time periodes without events no <code>Time Segment</code>
+is defined.</p>
+<p>The goal of the <code>Time Segments</code> is to be able to specify
+at each moment in time the location of a device. The location is
+determined by the CellID of the <code>Events</code> that are part of the
+<code>Time Segment</code>.</p>
+<p>As the <code>Time Segments</code> contain the <code>Events</code> no
+information is lost when converting the <code>Events</code> to
+<code>Time Segments</code>.</p>
+<pre class="mermaid">classDiagram
+  class TimeSegment {
+    +start_time: Time
+    +end_time: Time
+    +events: Event[0..*]
+    +type: Enum[Stop, Moving, Other, Missing, OutOfCountry]
+  }</pre>
+<h4 id="anchor"><code>Anchor</code></h4>
+<ul>
+<li>A combination of Cells that is meaningfull for a Device. An
+<code>Anchor</code> is, therefore, labelled.</li>
+<li>For example, the home location of a Device can be defined using a
+number of Cells (possibly weighted).</li>
+<li>A device can have multiple <code>Anchors</code> (e.g. ‘Home’,
+‘Work’)</li>
+<li>Has a begin time and end time for which the <code>Anchor</code> is
+valid.</li>
+</ul>
+<!--
+TODO: home country for tourists and border migration. Possible solution would be to have two types of achors: CellAnchor where the anchor is a combination of Cells and CountryAnchor where the anchor is a country. For, border trafic the anchor is probably a combination: Country + Cells where person crosses the border most often. So perhaps better to put it all in Anchor class and allow either country or cells to empty (at least one should be filled).
+-->
+<pre class="mermaid">classDiagram
+  class Anchor {
+    +start_time: Time
+    +end_time: Time
+    +type: Enum[Home, Work, ...]
+    +cells: CellID[1..*]
+    +weights: Number[1..*]
+  }</pre>
+<h4 id="continuous-user-diary"><code>Continuous User Diary</code></h4>
+<ul>
+<li>In the <code>Continuous User Diary</code> some of the
+<code>Time Segments</code> are labelled.</li>
+<li>For example, some of the <code>Time Segments</code> could be
+labelled as ‘At Home’.</li>
+</ul>
+<pre class="mermaid">classDiagram
+  class TimeSegment 
+  class ContinuousUserDiary {
+    +label: Enum[AtHome, Working, ...]
+    +anchor: Anchor[0..*]
+  }
+  TimeSegment &lt;|-- ContinuousUserDiary</pre>
+<h4 id="network-topology"><code>Network topology</code></h4>
+<ul>
+<li>Contains information for each Cell in the network.</li>
+<li>Contains for each Cell a raster map with the probability of
+connecting to the Cell given the location.</li>
+<li>Each record had a begin and end time indicating when the information
+is valid.</li>
+</ul>
+<pre class="mermaid">classDiagram
+  class NetworkTopology {
+    +cell_id: CellID
+    +tower_id
+    +start_time: Time
+    +end_time: Time
+    +location: GeoPoint[WGS84]
+    +probability_map: Raster[ProbabilityOfContact]
+    [+emplacement_id]
+    [+technology]
+    [+type_of_cell]
+    [+azimuth]
+    [+elevation_beamwidth]
+    [+azimuth_beamwidth]
+    [+power_of_admission]
+    [+electrical_down_tilt]
+    [+antenna_height]
+  }</pre>
+<p>Note that the <code>Event</code>, <code>Time Segment</code>,
+<code>Anchor</code> and <code>Continuous User Diary</code> do not
+contain geographic information. All geographic information is contained
+in the Cell that are part of the relevent object type. There are a
+couple of reasons for this. First, the location of a device is not known
+in more detail than the combination of Cell. Second, the transformation
+from Cell to geographic location depends in part on the specific use
+case. For some use cases this transformation is simple (count devices in
+Rome) while for other use cases a more complex transformation is needed
+(number of devices taking the train). Third, some of the methods for
+transforming the Cells to geographic location, such as the ML-EM
+estimator, need to combine the information from multiple devices at the
+same time. Therefore it is not possible to generate a geographic
+location per Device.</p>
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+</script>
+
+</body>
+</html>
