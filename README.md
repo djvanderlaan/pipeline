@@ -1,7 +1,7 @@
 ---
 title: Overview pipeline - version 0.1
 author: Edwin de Jonge and Jan van der Laan
-date: 2023-06-14
+date: 2023-06-16
 ---
 
 
@@ -142,10 +142,13 @@ classDiagram
 
 Discussion point: How to handle devices that have a home location outside of the country? For devices that are located just outside the border and commute regularly into the country, it is possible to define the 'BorderCrossing' location by the Cells where the device usually enters and leaves the country. For other devices, and specifically foreign devices it would be practical to define a 'HomeCountry' `Anchor`. However, this is not tied to specific Cells. One solution would be to add pseudo Cells for other countries. Another solution would be to add an optional 'country' attribute to the `Anchor`. 
 
+Discussion points: What is the minimal set of types needed for the use cases?
+
 
 #### `Continuous User Diary`
-- In the `Continuous User Diary` some of the `Time Segments` are labelled. 
-- For example, some of the `Time Segments` could be labelled as 'At Home'. 
+Using the `Achors` the `Time Segments` are labelled. The optionally a `Time Segment` has a reference to a relevant `Anchor`. For example a `Time Segment` labelled 'AtHome' will have a reference to the 'Home' `Anchor`. As mentioned above, this can be used to determine a more precise location for a device when it is at home.
+
+Note that not all `Time Segments` will be labelled. It is actually likely that more `Time Segments` will be unlabelled. It is also possible during the conversion from `Time Segement` to `Continuous User Diary` that multiple `Time Segments` are combined into one larger `Time Segment`. For example, in case a device first connects to Cell A and B and then to C, this might be divided into two `Time Segments`: one containing A and B and one containing just C. When the Home `Anchor` of the device is a combination of A, B and C both `Time Segments` might be combined into one `Continuous User Diary` labelled 'AtHome'.
 
 ```mermaid
 classDiagram
@@ -157,20 +160,18 @@ classDiagram
   TimeSegment <|-- ContinuousUserDiary
 ```
 
-#### `Network topology`
-- Contains information for each Cell in the network.
-- Contains for each Cell a raster map with the probability of connecting to the Cell given the location.
-- Each record had a begin and end time indicating when the information is valid.
+#### `Network Topology`
+The `Network Topology` contain information for each Cell in the network. The most important information for the pipeline are the CellID and the raster map with the probability of connecting to the Cell given the location. In the simplest case these probabilities are one for all grid cells within the best service area and zero outside. However, better would be to take into account the overlap of the Cells. Each record had a begin and end time indicating for when the information is valid.
 
 ```mermaid
 classDiagram
   class NetworkTopology {
     +cell_id: CellID
-    +tower_id
     +start_time: Time
     +end_time: Time
     +location: GeoPoint[WGS84]
     +probability_map: Raster[ProbabilityOfContact]
+    +tower_id
     [+emplacement_id]
     [+technology]
     [+type_of_cell]
@@ -182,6 +183,8 @@ classDiagram
     [+antenna_height]
   }
 ```
+
+#### Remarks
 
 Note that the `Event`, `Time Segment`, `Anchor` and `Continuous User Diary` do not contain geographic information. All geographic information is contained in the Cell that are part of the relevent object type. There are a couple of reasons for this. First, the location of a device is not known in more detail than the combination of Cell. Second, the transformation from Cell to geographic location depends in part on the specific use case. For some use cases this transformation is simple (count devices in Rome) while for other use cases a more complex transformation is needed (number of devices taking the train). Third, some of the methods for transforming the Cells to geographic location, such as the ML-EM estimator, need to combine the information from multiple devices at the same time. Therefore it is not possible to generate a geographic location per Device.
 
