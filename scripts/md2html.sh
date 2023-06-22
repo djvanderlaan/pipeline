@@ -8,6 +8,3 @@ pandoc "${IN}" --standalone -t html5 --metadata pagetitle="${IN}" -A scripts/inc
   sed -e 's/<\/code><\/pre>/<\/pre>/g' >\
   "${OUT}"
 
-
-
-
